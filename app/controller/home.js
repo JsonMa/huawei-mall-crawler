@@ -11,8 +11,10 @@ class HomeController extends Controller {
   }
 
   async login() {
-    await this.service.selenium.init()
-    await ctx.render('login.html');
+    const qrcodeUrl = await this.service.selenium.init();
+    await this.ctx.render('login.nj', {
+      qrcodeUrl,
+    });
   }
 }
 
