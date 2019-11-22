@@ -26,6 +26,7 @@ class SeleniumService extends Service {
           await submitContainer.findElement(By.className('product-button02'));
           this.ctx.logger.info('登录成功，抢货中...');
           clearInterval(loginTimer);
+          this.ctx.logger.info('等待抢单，未到达开始时间...');
         } catch (error) {
           this.ctx.logger.info('登录不成功，请重新登录...');
         }
@@ -35,9 +36,9 @@ class SeleniumService extends Service {
       // 登录成功- 开始抢货
       const startTime = new Date('2019-11-22 10:08:00');
       const endTime = new Date('2019-11-22 10:11:00');
-      this.ctx.logger.info('等待抢单，未到达开始时间...');
       const timer = setInterval(async () => {
-        if (Date.now() >= startTime) {
+        const isAdvanceStart = startTime - Date.now() <= 500;
+        if (Date.now() >= startTime || isAdvanceStart) {
           try {
             const submitContainer = await browser.findElement(By.id('pro-operation'));
             const submitButton = await submitContainer.findElement(By.className('product-button02'));
