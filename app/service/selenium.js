@@ -36,6 +36,8 @@ class SeleniumService extends Service {
       // 登录成功- 开始抢货
       const startTime = new Date('2019-11-22 10:08:00');
       const endTime = new Date('2019-11-22 10:11:00');
+      const initUrl = await browser.getCurrentUrl();
+      this.logger.info(`当前处于页面：${initUrl}`);
       const timer = setInterval(async () => {
         const isAdvanceStart = startTime - Date.now() <= 500;
         if (Date.now() >= startTime || isAdvanceStart) {
@@ -45,7 +47,9 @@ class SeleniumService extends Service {
             submitButton.click();
             this.ctx.logger.info('到达抢单时间，持续抢单中...');
           } catch (error) {
-            this.logger.error('抢单发生错误...', error);
+            const url = await browser.getCurrentUrl();
+            if (url !== initUrl) this.logger.info('页面正在跳转中...');
+            this.logger.info(`当前处于页面：${url}`);
           }
         }
         if (Date.now() > endTime) {
